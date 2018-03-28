@@ -35,9 +35,15 @@ game.subscribe(printBoard)
 game.subscribe(() => {
   const {winner} = game.getState();
 
-  if(winner){
+  if (winner){
     console.log(winner);
     process.exit(0);
+  }
+})
+game.subscribe(() => {
+  const {error} = game.getState();
+  if (error){
+    console.log(error)
   }
 })
 game.subscribe(getInput('X'))

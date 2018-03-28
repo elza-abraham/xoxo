@@ -31,13 +31,19 @@ const boardReducer = (board = Map(), action) => {
   return board;
 }
 
-export default function reducer(state = {board: Map(), turn: 'X', winner: ''}, action) {
-  const newBoard = boardReducer(state.board, action);
-
-  return {
-    board: newBoard,
-    turn: turnReducer(state.turn, action),
-    winner: winner(newBoard)
+export default function reducer(state = {}, action) {
+  const error = bad(state, action)
+  console.log(error)
+  if (!error){
+    const newBoard = boardReducer(state.board, action);
+    return {
+      board: newBoard,
+      turn: turnReducer(state.turn, action),
+      winner: winner(newBoard)
+    }
+  } else {
+    // return ({...state, error: error})
+    return Object.assign({}, state, error)
   }
 }
 
@@ -81,3 +87,22 @@ function streak(board, firstCoord, ...remainingCoords) {
   }
 }
 
+function bad(state, action){
+  // const position = action.position || []
+  // const board = state.board || Map()
+  if (action.position){
+    if (action.player !== state.turn){
+      return 'Note your turn'
+    }
+    action.position.forEach((coord) => {
+      if (coord < 0 || coord > 2){
+        return 'Invalid position!'
+      }
+    })
+  }
+  if (state.board){
+    if (state.board.hasIn(action.position)) {
+      return 'square already taken';
+    }
+  }
+}
