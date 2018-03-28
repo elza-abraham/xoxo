@@ -32,6 +32,14 @@ const game = createStore(gameReducer)
 // game.subscribe(() => console.log(game.getState()))
 
 game.subscribe(printBoard)
+game.subscribe(() => {
+  const {winner} = game.getState();
+
+  if(winner){
+    console.log(winner);
+    process.exit(0);
+  }
+})
 game.subscribe(getInput('X'))
 game.subscribe(getInput('O'))
 
